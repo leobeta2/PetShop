@@ -3,6 +3,7 @@
     <v-card
       v-for="item in product" v-bind:key="item.name"
       class="mx-auto"
+      :class="$style.cardProduct"
       max-width="345"
       elevation="2"
     >
@@ -31,7 +32,7 @@
       <v-btn
         text
         color="teal accent-4"
-        @click="reveal = true"
+        @click="revealText(item.id)"
       >
         Leer más...
       </v-btn>
@@ -39,7 +40,7 @@
 
     <v-expand-transition>
       <v-card
-        v-if="reveal"
+        v-if="showCard(item.id)"
         class="transition-fast-in-fast-out"
         :class="$style.cardReveal"
         style="height: 100%;"
@@ -54,7 +55,7 @@
           <v-btn
             text
             color="teal accent-4"
-            @click="reveal = false"
+            @click="revealText(item.id)"
           >
             Cerrar
           </v-btn>
@@ -74,10 +75,24 @@ import axios from "axios";
       return {
         product: [],
         index: 0,
-        reveal:false,
+        cardId: -1,
       }
     },
     methods: {
+      revealText(id){
+        console.log('reveal text'+ id);
+        if(this.cardId !== id){
+              this.cardId = id;
+        }else{
+          this.cardId = -1;
+        }
+      }, 
+      showCard(id){
+        console.log('otra vez'+ id);
+        return this.cardId === id ? true : false;
+      },
+    },
+    computed: {
 
     },
     created() {
@@ -111,6 +126,10 @@ import axios from "axios";
   opacity: 1 !important;
   position: absolute;
   width: 100%;
+}
+
+.cardProduct {
+  padding-top: 10px;
 }
 
 </style>
