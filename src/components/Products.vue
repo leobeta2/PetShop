@@ -1,20 +1,67 @@
 <template>
   <div>
-  <div v-for="item in product" v-bind:key="item.name">
     <v-card
-    elevation="2"
-    max-width="374">
+      v-for="item in product" v-bind:key="item.name"
+      class="mx-auto"
+      max-width="345"
+      elevation="2"
+    >
     <v-img
-      height="250"
       v-bind:src=item.photo
     ></v-img>
-    <v-card-title>{{item.name}}</v-card-title>
-    <v-card-subtitle>subtitle</v-card-subtitle>
-    <v-card-text>{{item.description}}</v-card-text>
-    <v-card-actions>actions</v-card-actions>
-    </v-card>
-  </div>
-    
+    <div :class="$style.title">
+      <v-img :class="$style.icon"
+      v-bind:src=item.attributes[0].icon
+    ></v-img>
+      <v-card-title>{{item.name}}</v-card-title>
+    </div>
+    <v-card-text>
+      <div :class="$style.espaciado"> 
+        <h3><b>Precio: ${{item.price}}</b></h3>
+        <p>
+        stock: {{item.stock}}
+        </p></div>
+        <div :class="$style.espaciado">
+          <p>Categoría: {{item.category.name}}</p>
+          <p>Mascota: {{item.attributes[0].name}}</p>
+        </div>
+    </v-card-text>
+
+    <v-card-actions>
+      <v-btn
+        text
+        color="teal accent-4"
+        @click="reveal = true"
+      >
+        Leer más...
+      </v-btn>
+    </v-card-actions>
+
+    <v-expand-transition>
+      <v-card
+        v-if="reveal"
+        class="transition-fast-in-fast-out"
+        :class="$style.cardReveal"
+        style="height: 100%;"
+      >
+        <v-card-text class="pb-0">
+          <p class="display-1 text--primary">
+            {{item.abstract}}
+          </p>
+          <p>{{item.description}}</p>
+        </v-card-text>
+        <v-card-actions class="pt-0">
+          <v-btn
+            text
+            color="teal accent-4"
+            @click="reveal = false"
+          >
+            Cerrar
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-expand-transition>
+  </v-card>
   </div>
 </template>
 
@@ -26,7 +73,8 @@ import axios from "axios";
     data() {
       return {
         product: [],
-        index: 0
+        index: 0,
+        reveal:false,
       }
     },
     methods: {
@@ -40,3 +88,31 @@ import axios from "axios";
     }
   }
 </script>
+
+<style lang="scss" module>
+
+.espaciado {
+  display: flex;
+  justify-content: space-between;
+  padding-right: 30px;
+}
+
+.title {
+  display: flex;
+  flex-direction: row;
+}
+
+.icon {
+  width: 10px;
+}
+
+.cardReveal {
+  bottom: 0;
+  opacity: 1 !important;
+  position: absolute;
+  width: 100%;
+}
+
+</style>
+
+
