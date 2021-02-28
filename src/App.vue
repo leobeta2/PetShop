@@ -6,45 +6,34 @@
       dark
     >
       <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
-
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
+        <h2>Pets Shop</h2>
       </div>
-
-      <v-spacer></v-spacer>
-
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
+      <v-btn v-for="item in category" v-bind:key="item.id"
         text
+        @click="typeCategory(item.name)"
       >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
+        <span class="mr-2">{{item.name}}</span>
       </v-btn>
+      <v-spacer></v-spacer>
+      <v-img
+      width="10px"
+      height="50px"
+        src="./assets/cart-green.png"
+      >
+      </v-img>
     </v-app-bar>
-
     <v-main>
-      <Products/>
+      <Products
+        :category = order
+      />
     </v-main>
   </v-app>
 </template>
 
 <script>
+import axios from "axios";
 import Products from './components/Products';
+
 
 export default {
   name: 'App',
@@ -54,7 +43,21 @@ export default {
   },
 
   data: () => ({
-    //
+    order:"",
+    category: ""
   }),
+  methods: {
+      typeCategory(order) {
+        console.log("typeCategory"+order);
+        this.order = order.toString();
+      }
+    },
+      created() {
+            axios.get("http://sva.talana.com:8000/api/product-category/")
+            .then(resp => {
+                this.category = resp.data;
+      });    
+    }
 };
 </script>
+

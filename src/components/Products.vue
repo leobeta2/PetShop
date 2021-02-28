@@ -1,7 +1,8 @@
 <template>
   <div>
-    <v-card
-      v-for="item in product" v-bind:key="item.name"
+    <div v-for="item in product" v-bind:key="item.name">
+         <v-card
+      v-if="showCategory(item.attributes)"
       class="mx-auto"
       :class="$style.cardProduct"
       max-width="345"
@@ -28,7 +29,16 @@
         </div>
     </v-card-text>
 
-    <v-card-actions>
+    <v-card-actions :class="$style.espaciado">
+      <v-btn
+        text
+        color="blue" 
+      >
+      <v-icon dark>
+        mdi-plus
+      </v-icon>
+        Agregar
+      </v-btn>
       <v-btn
         text
         color="teal accent-4"
@@ -63,6 +73,8 @@
       </v-card>
     </v-expand-transition>
   </v-card>
+    </div>
+ 
   </div>
 </template>
 
@@ -71,6 +83,9 @@ import axios from "axios";
 
   export default {
     name: 'Products',
+    props: {
+    category: { type: String, default: "" },
+    },
     data() {
       return {
         product: [],
@@ -80,7 +95,6 @@ import axios from "axios";
     },
     methods: {
       revealText(id){
-        console.log('reveal text'+ id);
         if(this.cardId !== id){
               this.cardId = id;
         }else{
@@ -88,14 +102,30 @@ import axios from "axios";
         }
       }, 
       showCard(id){
-        console.log('otra vez'+ id);
         return this.cardId === id ? true : false;
       },
+      showCategory(atributtes){
+          console.log('showCategory'+this.category);
+          let newCategory = this.category.slice(0,-1);
+          let showProduct = false; 
+          if(this.category == ""){
+            return true;
+          }    
+        atributtes.forEach(obj => {
+            if( obj.name.toUpperCase() == newCategory.toUpperCase() || obj.name.toUpperCase() == newCategory.toUpperCase() ){
+              showProduct = true;
+              return true;
+        }
+        });
+        return showProduct;
+      }
+
     },
     computed: {
 
     },
     created() {
+      console.log(this.category);
             axios.get("http://sva.talana.com:8000/api/product/")
             .then(resp => {
                 this.product = resp.data;
