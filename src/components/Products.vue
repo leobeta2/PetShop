@@ -108,7 +108,8 @@ import axios from "axios";
           console.log('showCategory'+this.category);
           let newCategory = this.category.slice(0,-1);
           let showProduct = false; 
-          if(this.category == ""){
+          if(this.category == "" || this.category.toUpperCase() == 'ALIMENTOS'){
+            showProduct = true;
             return true;
           }    
         atributtes.forEach(obj => {
